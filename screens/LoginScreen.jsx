@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -42,6 +43,10 @@ const LoginScreen = () => {
         console.log("Token:", token);
         console.log("UserId:", userId);
         console.log("RoleId:", roleId);
+
+        await AsyncStorage.setItem("userId", userId);
+        await AsyncStorage.setItem("token", token);
+        await AsyncStorage.setItem("roleId", roleId.toString());
 
         navigation.replace("Home");
       } else {
