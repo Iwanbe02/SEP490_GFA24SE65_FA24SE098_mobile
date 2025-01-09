@@ -14,6 +14,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from "@react-native-community/datetimepicker"; // Thay thế bằng thư viện datetimepicker
 import Icon from "react-native-vector-icons/FontAwesome"; // Import icon library
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const HouseListScreen = ({ route }) => {
   const { villageId } = route.params;
@@ -230,6 +231,16 @@ const HouseListScreen = ({ route }) => {
           </View>
         </Modal>
       )}
+
+      {/* Footer */}
+      <View style={styles.footer}>
+        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <MaterialCommunityIcons name="home" size={28} color="white" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+          <MaterialCommunityIcons name="account" size={28} color="white" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -300,6 +311,17 @@ const styles = StyleSheet.create({
   modalButtons: {
     flexDirection: "row",
     justifyContent: "space-between",
+  },
+  footer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "#007AFF",
+    padding: 10,
+    paddingHorizontal: 20,
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
 });
 

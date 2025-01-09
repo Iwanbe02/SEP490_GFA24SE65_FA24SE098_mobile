@@ -12,7 +12,7 @@ import {
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { MaterialCommunityIcons } from "@expo/vector-icons"; // Icon library for settings, notifications, etc.
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -126,18 +126,18 @@ const HomePage = () => {
           <Text style={styles.userName}>{userName}</Text>
           <Text style={styles.userStatus}>Spread Goodness</Text>
         </View>
-        <View style={styles.headerActions}>
-          <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-            <MaterialCommunityIcons
-              name="account"
-              size={28}
-              color="white"
-              style={styles.icon}
-            />
-          </TouchableOpacity>
-        </View>
       </View>
       {renderHomeBody()}
+
+      {/* Footer */}
+      <View style={styles.footer}>
+        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <MaterialCommunityIcons name="home" size={28} color="white" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+          <MaterialCommunityIcons name="account" size={28} color="white" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -189,6 +189,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 10,
+  },
+  footer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "#007AFF",
+    padding: 10,
+    paddingHorizontal: 20,
   },
 });
 

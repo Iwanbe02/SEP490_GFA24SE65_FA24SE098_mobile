@@ -6,10 +6,12 @@ import {
   Image,
   Button,
   Alert,
+  TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
@@ -124,6 +126,15 @@ const ProfileScreen = () => {
           </View>
         </>
       )}
+      {/* Footer */}
+      <View style={styles.footer}>
+        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <MaterialCommunityIcons name="home" size={28} color="white" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+          <MaterialCommunityIcons name="account" size={28} color="white" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -133,6 +144,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     padding: 16,
+    paddingBottom: 60,
   },
   avatar: {
     width: 100,
@@ -152,6 +164,17 @@ const styles = StyleSheet.create({
   loading: {
     flex: 1,
     justifyContent: "center",
+  },
+  footer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "#007AFF",
+    padding: 10,
+    paddingHorizontal: 20,
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
 });
 

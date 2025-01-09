@@ -6,11 +6,13 @@ import {
   FlatList,
   Button,
   ActivityIndicator,
+  TouchableOpacity,
   Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // For local storage
 import { useNavigation } from "@react-navigation/native";
-import { Card } from "react-native-paper"; // For card component (optional, can use View)
+import { Card } from "react-native-paper";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const VillageListScreen = () => {
   const [villages, setVillages] = useState([]);
@@ -90,6 +92,16 @@ const VillageListScreen = () => {
           }
         />
       )}
+
+      {/* Footer */}
+      <View style={styles.footer}>
+        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <MaterialCommunityIcons name="home" size={28} color="white" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+          <MaterialCommunityIcons name="account" size={28} color="white" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -136,6 +148,17 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 20,
     color: "#888",
+  },
+  footer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "#007AFF",
+    padding: 10,
+    paddingHorizontal: 20,
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
 });
 
