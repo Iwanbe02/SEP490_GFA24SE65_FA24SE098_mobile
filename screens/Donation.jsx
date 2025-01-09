@@ -5,10 +5,14 @@ import {
   StyleSheet,
   FlatList,
   ActivityIndicator,
+  TouchableOpacity,
   Alert,
 } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 const DonationsScreen = ({ route }) => {
+  const navigation = useNavigation();
   const { donations } = route.params || {}; // Nhận donations từ props
 
   // Kiểm tra donations có phải là một mảng hợp lệ không
@@ -48,9 +52,6 @@ const DonationsScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.appBar}>
-        <Text style={styles.appBarTitle}>My Donations</Text>
-      </View>
       {donations.length === 0 ? (
         <ActivityIndicator
           size="large"
@@ -64,6 +65,15 @@ const DonationsScreen = ({ route }) => {
           keyExtractor={(item, index) => index.toString()}
         />
       )}
+      {/* Footer */}
+      <View style={styles.footer}>
+        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <MaterialCommunityIcons name="home" size={28} color="white" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+          <MaterialCommunityIcons name="account" size={28} color="white" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -73,6 +83,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: "#f0f0f0",
+    paddingBottom: 60,
   },
   appBar: {
     backgroundColor: "#007bff",
@@ -114,6 +125,17 @@ const styles = StyleSheet.create({
     marginTop: 50,
     fontSize: 18,
     color: "red",
+  },
+  footer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "#007AFF",
+    padding: 10,
+    paddingHorizontal: 20,
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
 });
 

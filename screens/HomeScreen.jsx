@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  Image,
   TouchableOpacity,
   ActivityIndicator,
   TextInput,
@@ -16,10 +15,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [userName, setUserName] = useState("Huynh Minh");
-  const [imgPath, setImgPath] = useState(
-    "https://example.com/default-avatar.png"
-  );
+  const [userName, setUserName] = useState("");
   const [events, setEvents] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -44,7 +40,6 @@ const HomePage = () => {
       );
       if (response.status === 200) {
         setUserName(response.data.userName);
-        setImgPath(response.data.images["$values"][0].urlPath);
       }
     } catch (e) {
       console.log("Error fetching user info:", e);
@@ -68,10 +63,6 @@ const HomePage = () => {
 
   const renderSuggestedItem = (event) => (
     <View style={styles.suggestedCard} key={event.id}>
-      <Image
-        source={{ uri: event.imageUrls[0] }}
-        style={styles.suggestedImage}
-      />
       <Text style={styles.suggestedTitle}>{event.name}</Text>
       <Text style={styles.suggestedSubtitle}>Some location</Text>
     </View>
@@ -81,9 +72,6 @@ const HomePage = () => {
     <ScrollView>
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>Suggested for You</Text>
-        <TouchableOpacity>
-          <Text style={styles.seeMoreText}>See More</Text>
-        </TouchableOpacity>
       </View>
 
       {isLoading ? (
@@ -121,7 +109,6 @@ const HomePage = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Image source={{ uri: imgPath }} style={styles.avatar} />
         <View style={styles.headerText}>
           <Text style={styles.userName}>{userName}</Text>
           <Text style={styles.userStatus}>Spread Goodness</Text>
@@ -149,8 +136,8 @@ const styles = StyleSheet.create({
     padding: 20,
     flexDirection: "row",
     alignItems: "center",
+    paddingBottom: 60,
   },
-  avatar: { width: 40, height: 40, borderRadius: 20 },
   headerText: { marginLeft: 12 },
   userName: { color: "white", fontWeight: "bold", fontSize: 18 },
   userStatus: { color: "#e0e0e0", fontSize: 12 },
@@ -170,10 +157,10 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     overflow: "hidden",
+    padding: 10,
   },
-  suggestedImage: { width: "100%", height: 120 },
-  suggestedTitle: { fontSize: 16, fontWeight: "bold", margin: 10 },
-  suggestedSubtitle: { fontSize: 12, color: "#888", marginHorizontal: 10 },
+  suggestedTitle: { fontSize: 16, fontWeight: "bold" },
+  suggestedSubtitle: { fontSize: 12, color: "#888" },
   bookingButton: {
     marginTop: 20,
     backgroundColor: "#007AFF",

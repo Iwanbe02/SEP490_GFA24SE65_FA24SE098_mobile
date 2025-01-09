@@ -93,7 +93,7 @@ const ProfileScreen = () => {
   const handleTotalDonations = () => {
     Alert.alert(
       "Total Donations",
-      `Total Donations: $${totalDonations.toFixed(2)}`
+      `Total Donations: ${totalDonations.toFixed(2)} VND`
     );
   };
 
@@ -106,31 +106,43 @@ const ProfileScreen = () => {
   return (
     <View style={styles.container}>
       {userInfo && (
-        <>
+        <View style={styles.card}>
+          {" "}
           <Image source={{ uri: userInfo.imageUrl }} style={styles.avatar} />
-          <Text style={styles.title}>Name: {userInfo.userName}</Text>
+          <Text style={styles.title}>Name: {userInfo.userName}</Text>{" "}
           <Text>Email: {userInfo.userEmail}</Text>
           <Text>Phone: {userInfo.phone}</Text>
           <Text>Address: {userInfo.address}</Text>
           <Text>DOB: {userInfo.dob}</Text>
           <Text>Gender: {userInfo.gender}</Text>
           <Text>Country: {userInfo.country}</Text>
-
-          <View style={styles.buttonContainer}>
-            <Button title="Total Donate" onPress={handleTotalDonations} />
-            <Button
-              title="My Donations"
-              onPress={() => navigation.navigate("Donations", { donations })}
-            />
-            <Button title="Booking History" onPress={handleBookingHistory} />
-          </View>
-        </>
+        </View>
       )}
+
+      <View style={styles.buttonContainer}>
+        <Button title="Total Donate" onPress={handleTotalDonations} />
+      </View>
+
       {/* Footer */}
       <View style={styles.footer}>
         <TouchableOpacity onPress={() => navigation.navigate("Home")}>
           <MaterialCommunityIcons name="home" size={28} color="white" />
         </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => navigation.navigate("Donations", { donations })}
+        >
+          <MaterialCommunityIcons name="heart" size={28} color="white" />
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={handleBookingHistory}>
+          <MaterialCommunityIcons
+            name="calendar-check"
+            size={28}
+            color="white"
+          />
+        </TouchableOpacity>
+
         <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
           <MaterialCommunityIcons name="account" size={28} color="white" />
         </TouchableOpacity>
@@ -175,6 +187,18 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+  },
+  card: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 20,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+    width: "100%",
+    marginBottom: 20,
   },
 });
 

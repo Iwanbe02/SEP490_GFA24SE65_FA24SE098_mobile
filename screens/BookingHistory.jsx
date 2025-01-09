@@ -1,8 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, FlatList, Alert } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  Alert,
+  TouchableOpacity,
+} from "react-native";
 import { useRoute } from "@react-navigation/native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 const BookingHistoryScreen = () => {
+  const navigation = useNavigation();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -47,9 +57,6 @@ const BookingHistoryScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.appBar}>
-        <Text style={styles.appBarTitle}>Booking History</Text>
-      </View>
       {loading ? (
         <Text style={styles.noBookingsText}>Loading...</Text>
       ) : bookings.length === 0 ? (
@@ -61,6 +68,15 @@ const BookingHistoryScreen = () => {
           keyExtractor={(item, index) => index.toString()}
         />
       )}
+      {/* Footer */}
+      <View style={styles.footer}>
+        <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <MaterialCommunityIcons name="home" size={28} color="white" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+          <MaterialCommunityIcons name="account" size={28} color="white" />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -70,6 +86,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: "#f0f0f0",
+    paddingBottom: 60,
   },
   appBar: {
     backgroundColor: "#007bff",
@@ -100,6 +117,17 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginTop: 50,
     fontSize: 18,
+  },
+  footer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "#007AFF",
+    padding: 10,
+    paddingHorizontal: 20,
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
 });
 
