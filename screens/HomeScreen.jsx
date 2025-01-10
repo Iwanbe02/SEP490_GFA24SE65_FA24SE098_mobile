@@ -12,6 +12,7 @@ import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Image } from "react-native";
 
 const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -86,6 +87,14 @@ const HomePage = () => {
         </ScrollView>
       )}
 
+      <View style={styles.imageContainer}>
+        <Image
+          source={require("../assets/cover.png")}
+          style={styles.image}
+          resizeMode="contain"
+        />
+      </View>
+
       <TouchableOpacity
         style={styles.bookingButton}
         onPress={() => navigation.navigate("VillageListScreen")}
@@ -93,17 +102,6 @@ const HomePage = () => {
         <Text style={styles.bookingButtonText}>Booking Now</Text>
       </TouchableOpacity>
     </ScrollView>
-  );
-
-  const renderSearchBody = () => (
-    <View style={styles.center}>
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Search..."
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-      />
-    </View>
   );
 
   return (
@@ -152,12 +150,12 @@ const styles = StyleSheet.create({
   seeMoreText: { color: "#007AFF" },
   suggestedList: { paddingHorizontal: 10 },
   suggestedCard: {
-    width: 200,
-    marginRight: 10,
+    width: 150,
+    marginRight: 15,
     backgroundColor: "white",
-    borderRadius: 10,
+    borderRadius: 20,
     overflow: "hidden",
-    padding: 10,
+    padding: 20,
   },
   suggestedTitle: { fontSize: 16, fontWeight: "bold" },
   suggestedSubtitle: { fontSize: 12, color: "#888" },
@@ -168,21 +166,32 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
   },
-  bookingButtonText: { color: "white", fontSize: 16, fontWeight: "bold" },
-  center: { flex: 1, justifyContent: "center", alignItems: "center" },
-  searchInput: {
-    width: "80%",
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 10,
+  bookingButton: {
+    marginTop: 20,
+    backgroundColor: "#007AFF",
+    paddingVertical: 10,
+    paddingHorizontal: 30,
+    borderRadius: 20,
+    alignItems: "center",
+    alignSelf: "center",
   },
+
+  center: { flex: 1, justifyContent: "center", alignItems: "center" },
   footer: {
     flexDirection: "row",
     justifyContent: "space-between",
     backgroundColor: "#007AFF",
     padding: 10,
     paddingHorizontal: 20,
+  },
+  imageContainer: {
+    alignItems: "center",
+    marginVertical: 20,
+  },
+  image: {
+    width: 500,
+    height: 300,
+    resizeMode: "contain",
   },
 });
 

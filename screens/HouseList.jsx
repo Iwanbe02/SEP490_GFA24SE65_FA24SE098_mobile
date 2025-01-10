@@ -24,8 +24,7 @@ const HouseListScreen = ({ route }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedSlot, setSelectedSlot] = useState(1);
   const [houseId, setHouseId] = useState(null);
-  const [showDatePicker, setShowDatePicker] = useState(false); // State for date picker visibility
-
+  const [showDatePicker, setShowDatePicker] = useState(false);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -46,7 +45,7 @@ const HouseListScreen = ({ route }) => {
       if (response.status === 200) {
         const responseBody = await response.json();
         console.log("Fetched houses:", responseBody);
-        setHouses(responseBody.filter((house) => house.id)); // Chỉ giữ các nhà hợp lệ (có id)
+        setHouses(responseBody.filter((house) => house.id));
       } else {
         console.log("Failed to load houses. Status code: ", response.status);
       }
@@ -284,18 +283,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 10,
   },
+  datePickerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 10,
+  },
   selectedDateLabel: {
     fontSize: 16,
     fontWeight: "bold",
     flex: 1,
-    marginRight: 10,
-    textAlign: "center",
+    textAlign: "left",
   },
-  datePickerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
-  },
+
   slotPicker: {
     marginBottom: 10,
   },

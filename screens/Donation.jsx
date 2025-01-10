@@ -32,8 +32,10 @@ const DonationsScreen = ({ route }) => {
       <View style={styles.card}>
         <Text style={styles.donationType}>{item.donationType}</Text>
         <View style={styles.subtitle}>
-          <Text>Amount: ${item.amount}</Text>
-          <Text>Date: {item.dateTime}</Text>
+          <Text>Amount: {item.amount} VND</Text>
+          <Text>
+            Date: {new Date(item.dateTime).toISOString().split("T")[0]}
+          </Text>
           <Text>Description: {item.description}</Text>
         </View>
         <View style={styles.status}>
