@@ -9,10 +9,11 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage"; // For local storage
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
 import { Card } from "react-native-paper";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Image } from "react-native";
 
 const VillageListScreen = () => {
   const [villages, setVillages] = useState([]);
@@ -45,7 +46,27 @@ const VillageListScreen = () => {
       if (response.ok) {
         const responseBody = await response.json();
         if (responseBody.hasOwnProperty("$values")) {
-          setVillages(responseBody["$values"]);
+          // Lấy thêm chi tiết hình ảnh từng village
+          const villagesWithImages = await Promise.all(
+            responseBody["$values"].map(async (village) => {
+              const villageDetailResponse = await fetch(
+                `https://soschildrenvillage.azurewebsites.net/api/Village/GetVillageByIdWithImg/${village.id}`,
+                {
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                }
+              );
+
+              if (villageDetailResponse.ok) {
+                const villageDetail = await villageDetailResponse.json();
+                return { ...village, ...villageDetail }; // Gộp dữ liệu từ 2 API
+              }
+              return village;
+            })
+          );
+
+          setVillages(villagesWithImages);
         } else {
           Alert.alert("Error", "No villages found.");
         }
@@ -63,10 +84,20 @@ const VillageListScreen = () => {
   const renderVillage = ({ item }) => (
     <Card style={styles.card}>
       <View style={styles.cardContent}>
+        {/* Hiển thị hình ảnh nếu có */}
+        {item.imageUrls && item.imageUrls.length > 0 ? (
+          <Image
+            source={{ uri: item.imageUrls[0] }}
+            style={styles.villageImage}
+            resizeMode="cover"
+          />
+        ) : (
+          <Text style={styles.noImageText}>No Image Available</Text>
+        )}
+
         <Text style={styles.villageName}>{item.villageName}</Text>
         <Text style={styles.location}>Location: {item.location}</Text>
         <Text style={styles.description}>Description: {item.description}</Text>
-        <Text style={styles.status}>Status: {item.status}</Text>
         <Button
           title="View Houses"
           onPress={() =>
@@ -130,6 +161,17 @@ const styles = StyleSheet.create({
   villageName: {
     fontSize: 18,
     fontWeight: "bold",
+  },
+  villageImage: {
+    width: "100%",
+    height: 150,
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+  noImageText: {
+    textAlign: "center",
+    color: "gray",
+    marginBottom: 10,
   },
   location: {
     fontSize: 14,

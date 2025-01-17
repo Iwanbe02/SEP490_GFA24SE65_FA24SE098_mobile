@@ -6,7 +6,6 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
-  TextInput,
 } from "react-native";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
@@ -18,7 +17,6 @@ const HomePage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [userName, setUserName] = useState("");
   const [events, setEvents] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
 
   const navigation = useNavigation();
 
@@ -64,8 +62,17 @@ const HomePage = () => {
 
   const renderSuggestedItem = (event) => (
     <View style={styles.suggestedCard} key={event.id}>
+      {event.imageUrls && event.imageUrls.length > 0 && (
+        <Image
+          source={{ uri: event.imageUrls[0] }}
+          style={styles.eventImage}
+          resizeMode="cover"
+        />
+      )}
       <Text style={styles.suggestedTitle}>{event.name}</Text>
-      <Text style={styles.suggestedSubtitle}>Some location</Text>
+      <Text style={styles.suggestedSubtitle}>
+        {event.description || "No description available"}
+      </Text>
     </View>
   );
 
@@ -150,12 +157,19 @@ const styles = StyleSheet.create({
   seeMoreText: { color: "#007AFF" },
   suggestedList: { paddingHorizontal: 10 },
   suggestedCard: {
-    width: 150,
+    width: 200,
     marginRight: 15,
     backgroundColor: "white",
     borderRadius: 20,
     overflow: "hidden",
-    padding: 20,
+    padding: 10,
+  },
+  eventImage: {
+    width: "100%",
+    height: 150,
+    borderRadius: 10,
+    marginBottom: 10,
+    resizeMode: "cover",
   },
   suggestedTitle: { fontSize: 16, fontWeight: "bold" },
   suggestedSubtitle: { fontSize: 12, color: "#888" },
@@ -174,8 +188,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     alignItems: "center",
     alignSelf: "center",
+    marginBottom: 10,
   },
-
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
   footer: {
     flexDirection: "row",
@@ -183,6 +197,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#007AFF",
     padding: 10,
     paddingHorizontal: 20,
+    height: 60,
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    zIndex: 10,
   },
   imageContainer: {
     alignItems: "center",
@@ -190,7 +210,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 500,
-    height: 300,
+    height: 200,
     resizeMode: "contain",
   },
 });

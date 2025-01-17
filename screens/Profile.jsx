@@ -107,9 +107,7 @@ const ProfileScreen = () => {
     <View style={styles.container}>
       {userInfo && (
         <View style={styles.card}>
-          {" "}
-          <Image source={{ uri: userInfo.imageUrl }} style={styles.avatar} />
-          <Text style={styles.title}>Name: {userInfo.userName}</Text>{" "}
+          <Text style={styles.title}>Name: {userInfo.userName}</Text>
           <Text>Email: {userInfo.userEmail}</Text>
           <Text>Phone: {userInfo.phone}</Text>
           <Text>Address: {userInfo.address}</Text>

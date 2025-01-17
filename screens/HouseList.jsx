@@ -12,9 +12,10 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-import DateTimePicker from "@react-native-community/datetimepicker"; // Thay thế bằng thư viện datetimepicker
-import Icon from "react-native-vector-icons/FontAwesome"; // Import icon library
+import DateTimePicker from "@react-native-community/datetimepicker";
+import Icon from "react-native-vector-icons/FontAwesome";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Image } from "react-native";
 
 const HouseListScreen = ({ route }) => {
   const { villageId } = route.params;
@@ -45,7 +46,28 @@ const HouseListScreen = ({ route }) => {
       if (response.status === 200) {
         const responseBody = await response.json();
         console.log("Fetched houses:", responseBody);
-        setHouses(responseBody.filter((house) => house.id));
+
+        // Lấy thêm chi tiết hình ảnh từng house
+        const housesWithImages = await Promise.all(
+          responseBody.map(async (house) => {
+            const houseDetailResponse = await fetch(
+              `https://soschildrenvillage.azurewebsites.net/api/Houses/GetHouseByIdWithImg/${house.id}`,
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+
+            if (houseDetailResponse.status === 200) {
+              const houseDetail = await houseDetailResponse.json();
+              return { ...house, ...houseDetail }; // Gộp dữ liệu từ 2 API
+            }
+            return house;
+          })
+        );
+
+        setHouses(housesWithImages);
       } else {
         console.log("Failed to load houses. Status code: ", response.status);
       }
@@ -131,6 +153,15 @@ const HouseListScreen = ({ route }) => {
 
     return (
       <View style={styles.card}>
+        {item.imageUrls && item.imageUrls.length > 0 ? (
+          <Image
+            source={{ uri: item.imageUrls[0] }}
+            style={styles.houseImage}
+            resizeMode="cover"
+          />
+        ) : (
+          <Text style={styles.noImageText}>No Image Available</Text>
+        )}
         <Text style={styles.houseName}>{item.houseName || "Unknown Name"}</Text>
         <Text>House Number: {item.houseNumber || "N/A"}</Text>
         <Text>Location: {item.location || "N/A"}</Text>
@@ -265,6 +296,17 @@ const styles = StyleSheet.create({
   houseName: {
     fontSize: 18,
     fontWeight: "bold",
+  },
+  houseImage: {
+    width: "100%",
+    height: 150,
+    borderRadius: 8,
+    marginBottom: 10,
+  },
+  noImageText: {
+    textAlign: "center",
+    color: "gray",
+    marginBottom: 10,
   },
   modalBackground: {
     flex: 1,
