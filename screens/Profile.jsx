@@ -111,7 +111,12 @@ const ProfileScreen = () => {
           <Text>Email: {userInfo.userEmail}</Text>
           <Text>Phone: {userInfo.phone}</Text>
           <Text>Address: {userInfo.address}</Text>
-          <Text>DOB: {userInfo.dob}</Text>
+          <Text>
+            DOB:{" "}
+            {userInfo.dob
+              ? new Date(userInfo.dob).toISOString().split("T")[0]
+              : "N/A"}
+          </Text>
           <Text>Gender: {userInfo.gender}</Text>
           <Text>Country: {userInfo.country}</Text>
         </View>

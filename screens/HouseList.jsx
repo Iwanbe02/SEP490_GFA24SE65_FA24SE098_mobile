@@ -126,12 +126,23 @@ const HouseListScreen = ({ route }) => {
   };
 
   const handleConfirmBooking = () => {
-    if (!selectedDate || !selectedSlot) {
-      Alert.alert("Error", "Please select both a date and a time slot.");
+    const visitDay = selectedDate.toISOString().split("T")[0];
+    const minimumBookingDate = new Date();
+    minimumBookingDate.setDate(minimumBookingDate.getDate() + 1);
+
+    if (selectedDate < minimumBookingDate) {
+      Alert.alert(
+        "Error",
+        "You can only book for dates starting from tomorrow."
+      );
       return;
     }
 
-    const visitDay = selectedDate.toISOString().split("T")[0];
+    if (!selectedSlot) {
+      Alert.alert("Error", "Please select a time slot.");
+      return;
+    }
+
     createBooking(houseId, visitDay, selectedSlot);
     setShowBookingDialog(false);
   };
@@ -224,7 +235,7 @@ const HouseListScreen = ({ route }) => {
                       setSelectedDate(date);
                     }
                   }}
-                  minimumDate={today}
+                  minimumDate={new Date(today.setDate(today.getDate() + 1))}
                 />
               )}
 
