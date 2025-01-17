@@ -46,11 +46,11 @@ const VillageListScreen = () => {
       if (response.ok) {
         const responseBody = await response.json();
         if (responseBody.hasOwnProperty("$values")) {
-          // Lấy thêm chi tiết hình ảnh từng village
           const villagesWithImages = await Promise.all(
             responseBody["$values"].map(async (village) => {
+              console.log("Fetching details for village ID:", village.id);
               const villageDetailResponse = await fetch(
-                `https://soschildrenvillage.azurewebsites.net/api/Village/GetVillageByIdWithImg/${village.id}`,
+                `https://soschildrenvillage.azurewebsites.net/api/Village/GetVillageByIdWithImg?id=${village.id}`,
                 {
                   headers: {
                     "Content-Type": "application/json",
@@ -60,9 +60,11 @@ const VillageListScreen = () => {
 
               if (villageDetailResponse.ok) {
                 const villageDetail = await villageDetailResponse.json();
-                return { ...village, ...villageDetail }; // Gộp dữ liệu từ 2 API
+                return { ...village, ...villageDetail[0] };
+              } else {
+                console.warn(`Village details not found for ID: ${village.id}`);
+                return village;
               }
-              return village;
             })
           );
 
@@ -84,7 +86,6 @@ const VillageListScreen = () => {
   const renderVillage = ({ item }) => (
     <Card style={styles.card}>
       <View style={styles.cardContent}>
-        {/* Hiển thị hình ảnh nếu có */}
         {item.imageUrls && item.imageUrls.length > 0 ? (
           <Image
             source={{ uri: item.imageUrls[0] }}
