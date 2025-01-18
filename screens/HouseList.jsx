@@ -12,20 +12,20 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Image } from "react-native";
+import { Calendar } from "react-native-calendars";
 
 const HouseListScreen = ({ route }) => {
   const { villageId } = route.params;
   const [houses, setHouses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showBookingDialog, setShowBookingDialog] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState(null);
   const [selectedSlot, setSelectedSlot] = useState(1);
   const [houseId, setHouseId] = useState(null);
-  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(false);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -45,7 +45,6 @@ const HouseListScreen = ({ route }) => {
 
       if (response.status === 200) {
         const responseBody = await response.json();
-        console.log("Fetched houses:", responseBody);
 
         // Lấy thêm chi tiết hình ảnh từng house
         const housesWithImages = await Promise.all(
@@ -76,6 +75,12 @@ const HouseListScreen = ({ route }) => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const normalizeDate = (date) => {
+    const normalized = new Date(date);
+    normalized.setHours(0, 0, 0, 0);
+    return normalized;
   };
 
   const createBooking = async (houseId, visitDay, bookingSlotId) => {
@@ -126,20 +131,23 @@ const HouseListScreen = ({ route }) => {
   };
 
   const handleConfirmBooking = () => {
-    const visitDay = selectedDate.toISOString().split("T")[0];
-    const minimumBookingDate = new Date();
-    minimumBookingDate.setDate(minimumBookingDate.getDate() + 1);
-
-    if (selectedDate < minimumBookingDate) {
-      Alert.alert(
-        "Error",
-        "You can only book for dates starting from tomorrow."
-      );
+    if (!selectedDate) {
+      Alert.alert("Error", "Please select a visit date.");
       return;
     }
 
-    if (!selectedSlot) {
-      Alert.alert("Error", "Please select a time slot.");
+    const visitDay = selectedDate;
+    const minimumBookingDate = new Date();
+    minimumBookingDate.setDate(minimumBookingDate.getDate() + 1);
+
+    if (
+      new Date(visitDay) <
+      normalizeDate(minimumBookingDate.toISOString().split("T")[0])
+    ) {
+      Alert.alert(
+        "Error",
+        `You can only book for dates starting from tomorrow. Selected: ${visitDay}, Minimum: ${minimumBookingDate.toLocaleDateString()}`
+      );
       return;
     }
 
@@ -155,9 +163,6 @@ const HouseListScreen = ({ route }) => {
     { id: 5, startTime: "14:00", endTime: "15:00" },
     { id: 6, startTime: "15:00", endTime: "16:00" },
   ];
-
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
 
   const renderHouse = ({ item }) => {
     if (!item.id) return null;
@@ -214,30 +219,19 @@ const HouseListScreen = ({ route }) => {
               </Text>
 
               <View style={styles.datePickerContainer}>
-                <Text style={styles.selectedDateLabel}>
-                  {selectedDate
-                    ? selectedDate.toLocaleDateString("vi-VN")
-                    : "Chọn ngày"}
-                </Text>
-                <TouchableOpacity onPress={() => setShowDatePicker(true)}>
-                  <Icon name="calendar" size={24} color="#007AFF" />
-                </TouchableOpacity>
-              </View>
-
-              {showDatePicker && (
-                <DateTimePicker
-                  value={selectedDate}
-                  mode="date"
-                  display="default"
-                  onChange={(event, date) => {
-                    setShowDatePicker(false);
-                    if (date) {
-                      setSelectedDate(date);
-                    }
+                <Calendar
+                  onDayPress={(day) => {
+                    setSelectedDate(day.dateString);
                   }}
-                  minimumDate={new Date(today.setDate(today.getDate() + 1))}
+                  minDate={new Date().toISOString().split("T")[0]}
+                  markedDates={{
+                    [selectedDate]: {
+                      selected: true,
+                      selectedColor: "#007AFF",
+                    },
+                  }}
                 />
-              )}
+              </View>
 
               <Text>Select Slot Time</Text>
               <View style={styles.slotPicker}>
